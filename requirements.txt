@@ -21,5 +21,9 @@ requests==2.31.0
 
 # Document processing
 PyPDF2==3.0.1
+# Use PyMuPDF version with pre-compiled wheels for Python 3.11
 PyMuPDF==1.23.8
 Pillow==10.1.0
+
+# OCR dependencies - use versions with pre-compiled wheels
+pytesseract==0.3.10
