@@ -1,29 +1,28 @@
-# Core FastAPI dependencies
-fastapi==0.104.1
-uvicorn[standard]==0.24.0
-python-multipart==0.0.6
 
-# AI and ML dependencies
-google-generativeai==0.3.2
-pandas>=2.2.0,<3.0.0
-numpy>=1.24.0,<2.0.0
+fastapi
+uvicorn[standard]
+python-multipart
 
-# Data processing
-openpyxl==3.1.3
 
-# Environment and validation
-python-dotenv==1.0.0
-email-validator==2.1.0
-pydantic==2.5.0
+google-generativeai
+pandas
+numpy
 
-# HTTP and utilities
-requests==2.31.0
 
-# Document processing
-PyPDF2==3.0.1
-# Use PyMuPDF version with pre-compiled wheels for Python 3.11
-PyMuPDF==1.23.8
-Pillow==10.1.0
+openpyxl
 
-# OCR dependencies - use versions with pre-compiled wheels
-pytesseract==0.3.10
+
+python-dotenv
+email-validator
+pydantic
+
+
+requests
+
+
+PyPDF2
+PyMuPDF
+Pillow
+
+
+pytesseract
