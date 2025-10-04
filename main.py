@@ -831,7 +831,7 @@ class EmailService:
         """Send appointment booking email to doctor and admin"""
         try:
             if not EmailService.verify_email_config():
-                logger.error("❌ Email configuration is incomplete")
+                logger.warning("⚠️ Email configuration is incomplete - appointment will be recorded without email notification")
                 return False
                 
             logger.info(f"📧 Sending appointment email...")
@@ -1039,10 +1039,19 @@ async def book_appointment(request: AppointmentRequest):
                 }
             }
         else:
-            raise HTTPException(
-                status_code=500, 
-                detail="We encountered a technical issue sending your appointment request. Please try again or contact our support team."
-            )
+            # Return success even if email fails, but log the issue
+            logger.warning(f"⚠️ Email sending failed for {request.patient_name}, but appointment is recorded")
+            return {
+                "success": True,
+                "message": f"✅ Your appointment request with Dr. {request.doctor_name} has been recorded successfully! Our team will contact you shortly to confirm the details. (Note: Email notification is temporarily unavailable)",
+                "doctor_email": doctor_info["email"],
+                "appointment_details": {
+                    "doctor": request.doctor_name,
+                    "date": request.appointment_date,
+                    "time": request.appointment_time
+                },
+                "email_status": "Email notification temporarily unavailable"
+            }
             
     except HTTPException:
         raise
@@ -1244,6 +1253,32 @@ async def reload_doctors():
     except Exception as e:
         logger.error(f"❌ Error reloading doctors data: {e}")
         raise HTTPException(status_code=500, detail=f"Error reloading doctors data: {str(e)}")
+
+@app.get("/email-status")
+async def check_email_status():
+    """Check email configuration status"""
+    try:
+        email_config = {
+            "SMTP_HOST": SMTP_HOST,
+            "SMTP_PORT": SMTP_PORT,
+            "SMTP_USER": SMTP_USER,
+            "SMTP_PASS": "***" if SMTP_PASS else None,
+            "SMTP_FROM": SMTP_FROM,
+            "DEFAULT_APPOINTMENT_EMAIL": DEFAULT_APPOINTMENT_EMAIL
+        }
+        
+        missing = [key for key, value in email_config.items() if not value]
+        is_configured = EmailService.verify_email_config()
+        
+        return {
+            "email_configured": is_configured,
+            "missing_variables": missing,
+            "email_config": email_config,
+            "message": "Email configuration check completed"
+        }
+    except Exception as e:
+        logger.error(f"❌ Error checking email status: {e}")
+        raise HTTPException(status_code=500, detail=f"Error checking email status: {str(e)}")
 
 if __name__ == "__main__":
     print("Starting TeleMed AI Backend v2.0...")
