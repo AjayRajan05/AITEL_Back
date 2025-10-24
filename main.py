@@ -46,8 +46,8 @@ app.add_middleware(
         "http://192.168.56.1:3000", "http://192.168.56.1:3001", "http://192.168.56.1:3002", 
         "http://192.168.56.1:3003", "http://192.168.56.1:3004", "http://192.168.56.1:5173",
         # Add production frontend URLs here
-        "https://aitel.netlify.app/",
-        "https://telemed-ai.vercel.app"
+        "https://aitel.netlify.app/"
+        #"https://telemed-ai.vercel.app"
     ],
     allow_credentials=True,
     allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
